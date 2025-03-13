@@ -7,7 +7,7 @@ export default function Header(params = { params }) {
     const navigate = useNavigate();
 
     return <div className="global-header">
-        <ul style={{ listStyle: 'none', padding: '0px', marginTop: '10px' }}>
+        <ul style={{ listStyle: 'none', padding: '0px', marginTop: '20px' }}>
             <li>
                 <a href="https://www.persistent.com">
                     <img height="25px" width="25px" src="/logo.png" alt="persistent" />
