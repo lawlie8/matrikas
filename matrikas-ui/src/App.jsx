@@ -5,11 +5,9 @@ import MatrikasRouter from './security/MatrikasRouter'
 function App() {
 
   return (
-    <section>
       <MatrikasRouter>
-        <Header />
+        Landing page
       </MatrikasRouter>
-    </section>
   )
 }
 
