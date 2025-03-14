@@ -1,6 +1,6 @@
 import './Header.css';
 import { useNavigate } from "react-router";
-import { PieChartOutlined,FireOutlined,PlusCircleOutlined } from '@ant-design/icons';
+import { PieChartOutlined,FireOutlined,PlusCircleOutlined, HomeOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd'
 export default function Header(params = { params }) {
 
@@ -17,7 +17,12 @@ export default function Header(params = { params }) {
 
         </ul>
         <ul style={{ listStyle: 'none', padding: '0px', marginTop: '50px' }}>
-            <li key={"/dashboard"} style={{cursor:'pointer'}} onClick={()=>{navigate("/dashboard")}}>
+        <li key={"/"} style={{cursor:'pointer'}} onClick={()=>{navigate("/")}}>
+                <Tooltip  placement="right" title="Dashboard">
+                    <HomeOutlined style={{ fontSize: '25px' }}  />
+                </Tooltip>
+            </li>
+            <li key={"/dashboard"} style={{marginTop:'25px',cursor:'pointer'}} onClick={()=>{navigate("/dashboard")}}>
                 <Tooltip  placement="right" title="Dashboard">
                     <PieChartOutlined style={{ fontSize: '25px' }}  />
                 </Tooltip>
