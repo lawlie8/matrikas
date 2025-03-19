@@ -1,12 +1,13 @@
 import './Header.css';
 import { useNavigate } from "react-router";
-import { PieChartOutlined,FireOutlined,PlusCircleOutlined, HomeOutlined, HomeFilled, PieChartFilled, FireFilled, PlusCircleFilled } from '@ant-design/icons';
+import { PieChartOutlined, FireOutlined, PlusCircleOutlined, HomeOutlined, HomeFilled, PieChartFilled, FireFilled, PlusCircleFilled, SwapOutlined, SwapRightOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd'
 import { useState } from 'react';
+
 export default function Header(params = { params }) {
 
     const navigate = useNavigate();
-    const [currentSelectedPage,setCurrentSelectedPage] = useState("/"+window.location.href.split("/").pop());
+    const [currentSelectedPage, setCurrentSelectedPage] = useState("/" + window.location.href.split("/").pop());
     
     return <div className="global-header">
         <ul style={{ listStyle: 'none', padding: '0px', marginTop: '20px' }}>
@@ -15,8 +16,6 @@ export default function Header(params = { params }) {
                     <img height="25px" width="25px" src="/logo.png" alt="persistent" />
                 </a>
             </li>
-
-
         </ul>
         <ul style={{ listStyle: 'none', padding: '0px', marginTop: '50px' }}>
         <li key={"/"} style={{cursor:'pointer'}} onClick={()=>{
@@ -29,7 +28,6 @@ export default function Header(params = { params }) {
                          :
                         <HomeFilled style={{ fontSize: '25px',color:'#fc6008' }} className='header-icon' /> 
                     }
-                    
                 </Tooltip>
             </li>
             <li key={"/dashboard"} style={{marginTop:'25px',cursor:'pointer'}} onClick={()=>{
@@ -49,7 +47,6 @@ export default function Header(params = { params }) {
                 navigate("/scans")
                 }}>
                 <Tooltip  placement="right" title="Show Scans">
-                    
                 {
                         currentSelectedPage !== '/scans' ?
                         <FireOutlined style={{ fontSize: '25px' }} className='header-icon' />
@@ -68,6 +65,19 @@ export default function Header(params = { params }) {
                         <PlusCircleOutlined style={{ fontSize: '25px' }} className='header-icon' />
                          :
                         <PlusCircleFilled style={{ fontSize: '25px',color:'#fc6008'}} className='header-icon' /> 
+                    }
+                </Tooltip>
+            </li>
+            <li style={{marginTop:'25px',cursor:'pointer'}} onClick={()=>{
+                setCurrentSelectedPage("/comparecves");
+                navigate("/comparecves")
+                }}>
+                <Tooltip  placement="right" title="CVEComparison">
+                {
+                        currentSelectedPage !== '/comparecves' ?
+                        <SwapOutlined style={{ fontSize: '25px' }} className='header-icon' />
+                         :
+                        <SwapRightOutlined style={{ fontSize: '25px',color:'#fc6008'}} className='header-icon' /> 
                     }
                 </Tooltip>
             </li>

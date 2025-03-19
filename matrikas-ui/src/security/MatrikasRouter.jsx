@@ -4,6 +4,7 @@ import Dashboard from "../pages/dashboard/Dashboard";
 import App from "../App";
 import Landing from "../pages/landing/Landing";
 import Resources from "../pages/resources/Resources";
+import CVEComparison from "../pages/comparecves/CVEComparison";
 
 export default function MatrikasRouter(path = {path}) {
     return (
@@ -11,7 +12,7 @@ export default function MatrikasRouter(path = {path}) {
             <Route path="/scans" element={<Scans />}></Route>
             <Route path="/dashboard" element={<Dashboard />}></Route>
             <Route path="/resources" element={<Resources />}></Route>
-
+            <Route path="/comparecves" element ={<CVEComparison />}></Route>
             <Route path="/" element={<Landing />}></Route>
         </Routes>
  
