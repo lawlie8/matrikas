@@ -30,7 +30,7 @@ export default function Landing() {
         
         <Title level={2}>Contact</Title>
         <Paragraph>
-          For support, please reach out to our team at <a href="mailto:support@aquasec.com">support@aquasec.com</a>.
+          For support, please reach out to our team at <a href="mailto:support@aquadash.com">support@aquadash.com</a>.
         </Paragraph>
       </Card>
     </div>
