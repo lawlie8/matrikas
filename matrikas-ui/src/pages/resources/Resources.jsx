@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Table, Input, Button } from 'antd';
+import { LinkOutlined } from '@ant-design/icons';
 import 'antd/dist/reset.css';
 import './Resources.css';
 
@@ -35,7 +36,14 @@ export default function Resources() {
       title: 'Source',
       dataIndex: 'source',
       key: 'source',
-      render: (text) => <a href={text} target="_blank" rel="noopener noreferrer">{text}</a>,
+      render: (text) => (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span>{text}</span>
+          <a href={text} target="_blank" rel="noopener noreferrer">
+            <LinkOutlined style={{ fontSize: '16px', color: '#1890ff' }} />
+          </a>
+        </div>
+      ),
     },
     {
       title: 'Latest Version',
@@ -45,7 +53,7 @@ export default function Resources() {
   ];
 
   return (
-    <div className="resources-page-main">
+    <div className="resources-page-main" style={{ backgroundColor: 'white', padding: '20px' }}>
       <h1>Resource Page</h1>
       <h2 className="text-xl font-bold mb-4">Image Details</h2>
       <Table columns={columns} dataSource={data} pagination={{ pageSize: 5 }} />
