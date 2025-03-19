@@ -6,9 +6,9 @@ import './Resources.css';
 
 export default function Resources() {
   const initialData = [
-    { key: '1', name: 'aws-ebs-csi', source: 'https://github.com/kubernetes-sigs/aws-ebs-csi-driver/releases', version: '' },
-    { key: '2', name: 'calico', source: 'https://github.com/projectcalico/calico/releases/', version: '' },
-    { key: '3', name: 'aws-vpc-cni', source: 'https://github.com/aws/amazon-vpc-cni-k8s/releases', version: '' },
+    { key: '1', name: 'aws-ebs-csi', source: 'https://github.com/kubernetes-sigs/aws-ebs-csi-driver/releases', version: 'v1.41.0' },
+    { key: '2', name: 'calico', source: 'https://github.com/projectcalico/calico/releases/', version: 'v3.28.3 ' },
+    { key: '3', name: 'aws-vpc-cni', source: 'https://github.com/aws/amazon-vpc-cni-k8s/releases', version: 'v1.19.3' },
   ];
 
   const [data, setData] = useState(initialData);
