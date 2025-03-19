@@ -53,10 +53,10 @@ export default function Resources() {
   ];
 
   return (
-    <div className="resources-page-main" style={{ backgroundColor: 'white', padding: '20px' }}>
+    <div className="resources-page-main" >
       <h1>Resource Page</h1>
       <h2 className="text-xl font-bold mb-4">Image Details</h2>
-      <Table columns={columns} dataSource={data} pagination={{ pageSize: 5 }} />
+      <Table style={{padding: '20px' }} columns={columns} dataSource={data} pagination={{ pageSize: 5 }} />
       
 {/*       <h2 className="text-lg font-bold mt-6">Add Image Details</h2> */}
 {/*       <div className="flex flex-col gap-2 mt-4"> */}
