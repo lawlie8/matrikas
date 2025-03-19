@@ -10,3 +10,17 @@
     box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px, rgba(0, 0, 0, 0.05) 0px 5px 10px;
     background-color:white;
 }
+
+.resource-table{
+        margin:40px 20px 20px 20px ;
+        box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 16px;
+}
+
+.resource-page-heading{
+    float:left;
+    padding:10px;
+    margin-top:20px;
+    margin-left:20px;
+    border-radius:10px;
+    color: #fc6008;
+}
