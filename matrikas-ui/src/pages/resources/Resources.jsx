@@ -58,13 +58,13 @@ export default function Resources() {
       <h2 className="text-xl font-bold mb-4">Image Details</h2>
       <Table columns={columns} dataSource={data} pagination={{ pageSize: 5 }} />
       
-      <h2 className="text-lg font-bold mt-6">Add Image Details</h2>
-      <div className="flex flex-col gap-2 mt-4">
-        <Input name="name" value={formData.name} onChange={handleChange} placeholder="Image Name" />
-        <Input name="source" value={formData.source} onChange={handleChange} placeholder="Source URL" />
-        <Input name="version" value={formData.version} onChange={handleChange} placeholder="Latest Version" />
-        <Button type="primary" onClick={handleAdd}>Add Image</Button>
-      </div>
+{/*       <h2 className="text-lg font-bold mt-6">Add Image Details</h2> */}
+{/*       <div className="flex flex-col gap-2 mt-4"> */}
+{/*         <Input name="name" value={formData.name} onChange={handleChange} placeholder="Image Name" /> */}
+{/*         <Input name="source" value={formData.source} onChange={handleChange} placeholder="Source URL" /> */}
+{/*         <Input name="version" value={formData.version} onChange={handleChange} placeholder="Latest Version" /> */}
+{/*         <Button type="primary" onClick={handleAdd}>Add Image</Button> */}
+{/*       </div> */}
     </div>
   );
 }
