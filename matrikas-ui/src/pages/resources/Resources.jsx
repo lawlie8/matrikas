@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
+import { Table, Input, Button } from 'antd';
+import 'antd/dist/reset.css';
 import './Resources.css';
 
-export default function Resources(params={params}) {
+export default function Resources() {
   const initialData = [
-    { name: 'aws-ebs-csi', source: 'https://github.com/kubernetes-sigs/aws-ebs-csi-driver/releases', version: '' },
-    { name: 'calico', source: 'https://github.com/projectcalico/calico/releases/', version: '' },
-    { name: 'aws-vpc-cni', source: 'https://github.com/aws/amazon-vpc-cni-k8s/releases', version: '' },
+    { key: '1', name: 'aws-ebs-csi', source: 'https://github.com/kubernetes-sigs/aws-ebs-csi-driver/releases', version: '' },
+    { key: '2', name: 'calico', source: 'https://github.com/projectcalico/calico/releases/', version: '' },
+    { key: '3', name: 'aws-vpc-cni', source: 'https://github.com/aws/amazon-vpc-cni-k8s/releases', version: '' },
   ];
 
   const [data, setData] = useState(initialData);
@@ -17,39 +19,43 @@ export default function Resources(params={params}) {
   };
 
   const handleAdd = () => {
-    setData([...data, formData]);
+    if (!formData.name || !formData.source) return;
+    const newData = { key: Date.now().toString(), ...formData };
+    setData([...data, newData]);
     setFormData({ name: '', source: '', version: '' });
   };
 
+  const columns = [
+    {
+      title: 'Image Name',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Source',
+      dataIndex: 'source',
+      key: 'source',
+      render: (text) => <a href={text} target="_blank" rel="noopener noreferrer">{text}</a>,
+    },
+    {
+      title: 'Latest Version',
+      dataIndex: 'version',
+      key: 'version',
+    },
+  ];
+
   return (
     <div className="resources-page-main">
-      <h1>Resource Page Goes Here</h1>
+      <h1>Resource Page</h1>
       <h2 className="text-xl font-bold mb-4">Image Details</h2>
-      <table className="w-full border-collapse border border-gray-300">
-        <thead>
-          <tr>
-            <th className="border p-2">Image Name</th>
-            <th className="border p-2">Source</th>
-            <th className="border p-2">Latest Version</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((item, index) => (
-            <tr key={index}>
-              <td className="border p-2">{item.name}</td>
-              <td className="border p-2"><a href={item.source} className="text-blue-500" target="_blank" rel="noopener noreferrer">{item.source}</a></td>
-              <td className="border p-2">{item.version}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <Table columns={columns} dataSource={data} pagination={{ pageSize: 5 }} />
       
       <h2 className="text-lg font-bold mt-6">Add Image Details</h2>
       <div className="flex flex-col gap-2 mt-4">
-        <input className="border p-2" name="name" value={formData.name} onChange={handleChange} placeholder="Image Name" />
-        <input className="border p-2" name="source" value={formData.source} onChange={handleChange} placeholder="Source URL" />
-        <input className="border p-2" name="version" value={formData.version} onChange={handleChange} placeholder="Latest Version" />
-        <button className="bg-blue-500 text-white p-2" onClick={handleAdd}>Add Image</button>
+        <Input name="name" value={formData.name} onChange={handleChange} placeholder="Image Name" />
+        <Input name="source" value={formData.source} onChange={handleChange} placeholder="Source URL" />
+        <Input name="version" value={formData.version} onChange={handleChange} placeholder="Latest Version" />
+        <Button type="primary" onClick={handleAdd}>Add Image</Button>
       </div>
     </div>
   );
