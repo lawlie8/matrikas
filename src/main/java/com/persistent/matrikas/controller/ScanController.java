@@ -2,6 +2,7 @@ package com.persistent.matrikas.controller;
 import com.persistent.matrikas.entity.Scan;
 import com.persistent.matrikas.service.ScanService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +17,16 @@ public class ScanController {
     @PostMapping
     public Scan createScan(@RequestBody Scan scan) {
         return scanService.createScan(scan);
+    }
+
+    @PostMapping("/new/{tagId}")
+    public ResponseEntity<String> scanTag(@PathVariable Long tagId) {
+        try {
+//            scanService.createDockerAndScan(tagId);
+            return ResponseEntity.ok("Scan triggered successfully for tag ID: " + tagId);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error during scan: " + e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")

@@ -16,6 +16,6 @@ public interface ScanService {
 
 
     Scan updateScan(Long scanId, Scan scan) throws Exception;
-
+//    public void createDockerAndScan(Long tagId) throws Exception;
     void deleteScan(Long id) throws Exception;
 }

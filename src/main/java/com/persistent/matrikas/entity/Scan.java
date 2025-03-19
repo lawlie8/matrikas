@@ -22,16 +22,16 @@ public class Scan {
     private int total;
 
     @Column(nullable = false)
-    private int high;
+    private String high;
 
     @Column(nullable = false)
-    private int low;
+    private String low;
 
     @Column(nullable = false)
-    private int medium;
+    private String medium;
 
     @Column(nullable = false)
-    private int critical;
+    private String critical;
 
     public Long getId() {
         return id;
@@ -65,35 +65,35 @@ public class Scan {
         this.total = total;
     }
 
-    public int getHigh() {
+    public String getHigh() {
         return high;
     }
 
-    public void setHigh(int high) {
+    public void setHigh(String high) {
         this.high = high;
     }
 
-    public int getLow() {
+    public String getLow() {
         return low;
     }
 
-    public void setLow(int low) {
+    public void setLow(String low) {
         this.low = low;
     }
 
-    public int getMedium() {
+    public String getMedium() {
         return medium;
     }
 
-    public void setMedium(int medium) {
+    public void setMedium(String medium) {
         this.medium = medium;
     }
 
-    public int getCritical() {
+    public String getCritical() {
         return critical;
     }
 
-    public void setCritical(int critical) {
+    public void setCritical(String critical) {
         this.critical = critical;
     }
 }

@@ -13,7 +13,7 @@ public class TagsController {
     @Autowired
     private TagsService tagsService;
 
-    @PostMapping
+    @PostMapping("")
     public Tags createTag(@RequestBody Tags tag) {
         return tagsService.createTags(tag);
     }
@@ -23,7 +23,7 @@ public class TagsController {
 //        return tagsService(id);
 //    }
 
-    @GetMapping
+    @GetMapping("")
     public List<Tags> getAllTags() {
         return tagsService.getAllTags();
     }
