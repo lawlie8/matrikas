@@ -3,6 +3,7 @@ import './index.css'
 import { BrowserRouter } from 'react-router'
 import App from './App.jsx'
 import Header from './pages/global/header/Header.jsx'
+import '@ant-design/v5-patch-for-react-19';
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
