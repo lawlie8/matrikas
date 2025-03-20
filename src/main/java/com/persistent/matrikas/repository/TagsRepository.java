@@ -8,5 +8,7 @@ import java.util.List;
 
 public interface TagsRepository extends JpaRepository<Tags, Long>  {
     List<Tags> findByLibraryId(Long libraryId);
+    boolean existsByLibraryAndVersion(Library library, String version);
+
 
 }
