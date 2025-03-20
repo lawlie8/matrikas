@@ -50,3 +50,17 @@
     }
 }
 
+.job-start-icon{
+    font-size:50px;
+    width:50px;
+    position:relative;
+    color:#02ce02;
+    left:calc(100% - 60px);
+
+    &:hover {
+        cursor: pointer;
+        color: #2ba03b;
+    }
+}
+
+
