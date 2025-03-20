@@ -1,12 +1,36 @@
-import { Row, Col, List, Form, Select, notification, Input } from 'antd';
+import { Row, Col, List, Form, Select, notification, Input, Tag } from 'antd';
 import instance from '../../util/axios';
 import './Scans.css';
 import { CaretRightOutlined } from '@ant-design/icons';
-import { CREATE_JOB_URL } from '../../util/Constants';
+import { CREATE_JOB_URL, GET_ALL_JOBS } from '../../util/Constants';
+import React, { useEffect, useState } from 'react';
 
 
 export default function Scans(params = { params }) {
 
+    const [jobList, setJobList] = useState([]);
+
+    useEffect(() => {
+        instance.get(GET_ALL_JOBS).then((response) => {
+            if (response.status === 200) {
+                notification.success({
+                    message: "Sucess",
+                    duration: 1,
+                    description: "Fetched All Jobs",
+                    style: { width: '200px' }
+                })
+                setJobList(response?.data);
+            }
+        }).catch(() => {
+            notification.error({
+                message: "Error",
+                duration: 1,
+                description: "Failed To Fetch Jobs",
+                style: { width: '250px' }
+            })
+        });
+
+    }, []);
 
     const onFinish = (values) => {
         if (values.imageName === undefined || values.imageVersion === undefined || values.jobName === undefined) {
@@ -28,6 +52,7 @@ export default function Scans(params = { params }) {
                         style: { width: '200px' }
                     })
                 }
+                window.location.reload();
             }).catch(() => {
                 notification.error({
                     message: "Error",
@@ -103,22 +128,34 @@ export default function Scans(params = { params }) {
                 </Col>
                 <Col span={18} style={{ height: '100%' }}>
                     <List>
-                        <List.Item style={{ height: '75px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', padding: '0px', margin: '10px 20px', borderRadius: '10px' }}>
-                            <ul style={{ display: 'flex', listStyle: 'none', height: '100%', width: '100%', margin: '0px', padding: '0px' }}>
-                                <li style={{ height: '100%', width: "50px", display: 'grid', alignContent: 'center' }}>
-                                    1
-                                </li>
-                                <li style={{ height: '100%', width: "20%", display: 'grid', alignContent: 'center' }}>
-                                    This is The Name of Job
-                                </li>
-                                <li style={{ height: '100%', width: "40%", display: 'grid', alignContent: 'center' }}>
-                                    11th March 2025
-                                </li>
-                                <li style={{ height: '100%', width: "40%", display: 'grid', alignContent: 'center' }}>
-                                    <CaretRightOutlined className='job-start-icon' />
-                                </li>
-                            </ul>
-                        </List.Item>
+
+                        {
+                            jobList.map((item, index) => (
+                                <List.Item style={{ height: '75px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', padding: '0px', margin: '10px 20px', borderRadius: '10px' }}>
+                                    <ul style={{ display: 'flex', listStyle: 'none', height: '100%', width: '100%', margin: '0px', padding: '0px' }}>
+                                        <li style={{ height: '100%', width: "50px", display: 'grid', alignContent: 'center' }}>
+                                            {item.id}
+                                        </li>
+                                        <li style={{ height: '100%', width: "20%", display: 'grid', alignContent: 'center' }}>
+                                            {item.jobName}
+                                        </li>
+                                        <li style={{ height: '100%', width: "20%", display: 'grid', alignContent: 'center' }}>
+                                            <Tag style={{position:'relative',textAlign :'center'}}>
+                                                {item.status}
+                                            </Tag>
+
+                                        </li>
+                                        <li style={{ height: '100%', width: "20%", display: 'grid', alignContent: 'center' }}>
+                                            {item.creationDate}
+                                        </li>
+                                        <li style={{ height: '100%', width: "40%", display: 'grid', alignContent: 'center' }}>
+                                            <CaretRightOutlined className='job-start-icon' />
+                                        </li>
+                                    </ul>
+                                </List.Item>
+                            ))
+                        }
+
 
                     </List>
                 </Col>

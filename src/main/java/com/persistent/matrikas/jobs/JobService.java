@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class JobService {
@@ -32,6 +33,10 @@ public class JobService {
             return false;
         }
         return true;
+    }
+
+    public List<Jobs> getAllJobs(){
+        return jobRepo.findAll();
     }
 
 }

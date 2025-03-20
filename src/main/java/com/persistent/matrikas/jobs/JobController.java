@@ -28,6 +28,17 @@ public class JobController {
         }
     }
 
+    @RequestMapping(path = "/get/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAllJobs() {
+        try {
+            log.info("Rest Call to Fetch All Jobs");
+            return ResponseEntity.ok(jobService.getAllJobs());
+        } catch (Exception e) {
+            log.error("Exception Occurred While Starting Job :", e);
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
     @RequestMapping(path = "/create", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createJob(@RequestBody JobCreationDTO jobCreationDTO) {
         try {
