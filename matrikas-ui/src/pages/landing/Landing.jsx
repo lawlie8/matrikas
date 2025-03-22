@@ -1,38 +1,46 @@
 import React from 'react';
 import { Card, Typography, List } from 'antd';
 import './Landing.css';
+import vulnerabilityImage from '/data/image_222.jpg';
+import managementImage from '/data/vulneraility_mange.jpg';
 
 const { Title, Paragraph } = Typography;
 
 export default function Landing() {
   return (
-    <div className="landing-page-main" style={{ backgroundColor: 'white', minHeight: '100vh', padding: '20px', display: 'flex', justifyContent: 'center' }}>
-      <Card style={{ maxWidth: 800, width: '100%', boxShadow: 'none', border: 'none' }}>
-        <Title level={1}>About Aqua Dashboard</Title>
-        <Paragraph>
-          The Aqua Dashboard is a powerful tool designed to provide insights into your container security posture.
-          It integrates with the Aqua Security platform to display real-time data on vulnerabilities, compliance,
-          and security events.
-        </Paragraph>
-        
-        <Title level={2}>Features</Title>
-        <List
-          bordered={false}
-          dataSource={["Real-time vulnerability scanning", "Detailed reports on security incidents", "Integration with CI/CD pipelines", "Customizable dashboards and alerts"]}
-          renderItem={item => <List.Item>{item}</List.Item>}
-        />
-        
-        <Title level={2}>Getting Started</Title>
-        <Paragraph>
-          To get started, ensure you have the necessary API tokens and access to the Aqua Security platform.
-          Follow the documentation for setup instructions and best practices.
-        </Paragraph>
-        
-        <Title level={2}>Contact</Title>
-        <Paragraph>
-          For support, please reach out to our team at <a href="mailto:support@aquadash.com">support@aquadash.com</a>.
-        </Paragraph>
-      </Card>
+    <div className="landing-page-main">
+      {/* Left side content */}
+      <div className="landing-content">
+        <Card className="landing-card">
+          <Title level={1} className="title">About Aqua Dashboard</Title>
+          <Paragraph className="description">
+            The Aqua Dashboard is a powerful tool designed to provide insights into your container security posture.
+            It integrates with the Aqua Security platform to display real-time data on vulnerabilities, compliance,
+            and security events.
+          </Paragraph>
+
+          <Title level={2} className="title">Features</Title>
+          <List
+            className="features-list"
+            bordered={false}
+            dataSource={[
+              "Real-time vulnerability scanning",
+              "Detailed reports on security incidents",
+              "Integration with CI/CD pipelines",
+              "Real-time release monitoring",
+              "Automated CVE reporting and alerts",
+              "Efficient version comparison",
+            ]}
+            renderItem={item => <List.Item className="list-item">{item}</List.Item>}
+          />
+        </Card>
+      </div>
+
+      {/* Right side images */}
+      <div className="images-container">
+        <img src={vulnerabilityImage} alt="Vulnerability" className="landing-image" />
+        <img src={managementImage} alt="Vulnerability Management" className="landing-image" />
+      </div>
     </div>
   );
 }
