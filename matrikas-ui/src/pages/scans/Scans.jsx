@@ -20,7 +20,6 @@ export default function Scans(params = { params }) {
                     style: { width: '200px' }
                 })
                 setJobList(response?.data);
-                console.log(response.data); 
             }
         }).catch(() => {
             notification.error({
