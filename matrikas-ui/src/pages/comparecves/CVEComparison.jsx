@@ -22,7 +22,7 @@ export default function CVEComparison() {
     if (!selectedImage || !version1 || !version2) return;
 
     const mockCVEData = [
-      { library: "aws-ebs-csi", total: 10, cve: 'CVE-2023-0001', severity: 'High', status: version1 !== version2 ? 'Fixed' : 'Present' },
+      { library: "aws-ebs-csi", total: 10, cve: 'CVE-2023-0001', severity: 'Critical', status: version1 !== version2 ? 'Fixed' : 'Present' },
       { library: "abbc1 ", total: 20, cve: 'CVE-2023-0002', severity: 'Medium', status: version1 !== version2 ? 'Fixed' : 'Present' },
       { library: "aws-ebs-csi", total: 12, cve: 'CVE-2023-0003', severity: 'Low', status: 'Present' },
       { library: "aws-ebs-csi", total: 10, cve: 'CVE-2023-0001', severity: 'High', status: version1 !== version2 ? 'Fixed' : 'Present' },
@@ -30,7 +30,7 @@ export default function CVEComparison() {
       { library: "aws-ebs-csi", total: 12, cve: 'CVE-2023-0003', severity: 'Low', status: 'Present' },
       { library: "aws-ebs-csi", total: 10, cve: 'CVE-2023-0001', severity: 'High', status: version1 !== version2 ? 'Fixed' : 'Present' },
       { library: "aws-ebs-csi", total: 20, cve: 'CVE-2023-0002', severity: 'Medium', status: version1 !== version2 ? 'Fixed' : 'Present' },
-      { library: "aws-ebs-csi", total: 12, cve: 'CVE-2023-0003', severity: 'Low', status: 'Present' },
+      { library: "aws-ebs-csi", total: 12, cve: 'CVE-2023-0003', severity: 'Critical', status: 'Present' },
       { library: "aws-ebs-csi", total: 10, cve: 'CVE-2023-0001', severity: 'High', status: version1 !== version2 ? 'Fixed' : 'Present' },
       { library: "aws-ebs-csi", total: 20, cve: 'CVE-2023-0002', severity: 'Medium', status: version1 !== version2 ? 'Fixed' : 'Present' },
       { library: "aws-ebs-csi", total: 12, cve: 'CVE-2023-0003', severity: 'Low', status: 'Present' },
@@ -67,39 +67,39 @@ export default function CVEComparison() {
   ];
 
   // Prepare data for the line chart based on mockCVEData
-  const chartData = comparisonResult.map(item => ({
-    cve: item.cve,
-    total: item.total,
-    library: item.library,
-  }));
+  const severityCounts = comparisonResult.reduce((acc, item) => {
+    acc[item.severity] = (acc[item.severity] || 0) + 1;
+    return acc;
+  }, {});
 
-  const chartOptions = {
-    chart: {
-      id: 'line-chart',
-      type: 'line',
-      height: '300px',
-    },
-    xaxis: {
-      categories: chartData.map(data => data.library),
-    },
-    yaxis: {
-
-      title: {
-        text: 'CVE Count',
-      },
-    },
-    stroke: {
-      curve: 'smooth',
-    },
-    colors: ['#00E396'],
+  const donutChartData = {
+    series: [severityCounts['Critical'] || 0, severityCounts['High'] || 0, severityCounts['Medium'] || 0, severityCounts['Low'] || 0],
+    labels: ['Critical', 'High', 'Medium', 'Low'],
   };
 
-  const chartSeries = [
-    {
-      name: 'CVE Count',
-      data: chartData.map(data => data.total),
+  const donutChartOptions = {
+    chart: {
+      id: 'donut-chart',
+      type: 'pie',
+      height: '300px',
     },
-  ];
+    labels: donutChartData.labels,
+    responsive: [
+      {
+        breakpoint: 480,
+        options: {
+          chart: {
+            width: '100%',
+          },
+        },
+      },
+    ],
+    colors: ['#DF2026', "#FF8C00",'#FEB019' , '#FFFF9F'],
+    legend: {
+      position: 'bottom',
+    },
+    dataLabels: { enabled: true },
+  };
 
   return (
     <div className="cve-comparison-page">
@@ -127,24 +127,36 @@ export default function CVEComparison() {
           </Col>
           <Col span={10}>
             {/* <Row gutter={16}> */}
-              {/* Total CVE count card */}
               <Col >
-                <Card title="Total CVEs fixed" bordered={false}>
-                  <Statistic title="High" value="10" />
-                  <Statistic title="Medium" value="10" />
-                </Card>
+              
+                {comparisonResult.length > 0 && <Card title="Total CVEs fixed"> 
+                <Row gutter={16}>
+                <Col span={6}>
+          <Statistic title="Critical" value="10" />
+        </Col>
+        <Col span={6}>
+          <Statistic title="High" value="10" />
+        </Col>
+        <Col span={6}>
+          <Statistic title="Medium" value="10" />
+        </Col>
+        <Col span={6}>
+          <Statistic title="Low" value="5" /> 
+        </Col>
+      </Row>
+                </Card>}
               </Col>
           <Col>
-            {comparisonResult.length > 0 && (
-              <Card title="CVE Count Chart" >
-                <Chart
-                  options={chartOptions}
-                  series={chartSeries}
-                  type="line"
-                  height="300px"
-                />
-              </Card>
-            )}
+          {comparisonResult.length > 0 && (
+                <Card title="CVE Severity Data">
+                  <Chart
+                    options={donutChartOptions}
+                    series={donutChartData.series}
+                    type="pie"
+                    height="300px"
+                  />
+                </Card>
+              )}
           </Col>
           {/* </Row> */}
           </Col>
