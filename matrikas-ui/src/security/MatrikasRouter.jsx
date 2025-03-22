@@ -10,10 +10,10 @@ export default function MatrikasRouter(path = {path}) {
     return (
         <Routes>
             <Route path="/scans" element={<Scans />}></Route>
-            <Route path="/dashboard" element={<Dashboard />}></Route>
+            <Route path="/" element={<Dashboard />}></Route>
             <Route path="/resources" element={<Resources />}></Route>
             <Route path="/comparecves" element ={<CVEComparison />}></Route>
-            <Route path="/" element={<Landing />}></Route>
+            <Route path="/info" element={<Landing />}></Route>
         </Routes>
  
     );
