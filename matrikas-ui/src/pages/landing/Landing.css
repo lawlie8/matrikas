@@ -5,7 +5,7 @@
     width: calc(100% - 95px);
     left: 70px;
     top: 0px;
-    border-radius: 10px;
+    border-radius: 10px; 
     border: 1px solid #1a1a1a3d;
     box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 25px, rgba(0, 0, 0, 0.05) 0px 5px 10px;
     background-color: white;
@@ -19,7 +19,7 @@
 
 .landing-content {
     width: 55%;
-    padding-right: 20px; /* Space between text and images */
+    padding-right: 20px; 
 }
 
 .landing-card {
@@ -44,19 +44,19 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px; /* Proper spacing between images */
-    padding-left: 20px; /* Padding for better separation */
+    gap: 20px;
+    padding-left: 20px; 
 }
 
 .landing-image {
     width: 100%;
     max-height: 250px;
-    object-fit: contain; /* Ensures images maintain aspect ratio */
+    object-fit: contain; 
     border-radius: 8px;
     box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;
-    padding: 10px; /* Padding around images */
-    background: #f9f9f9; /* Light background for better visibility */
-    border: 1px solid #ddd; /* Subtle border */
+    padding: 10px;
+    background: #f9f9f9; 
+    border: 1px solid #ddd; 
 }
 
 .features-list {

@@ -9,7 +9,6 @@ const { Title, Paragraph } = Typography;
 export default function Landing() {
   return (
     <div className="landing-page-main">
-      {/* Left side content */}
       <div className="landing-content">
         <Card className="landing-card">
           <Title level={1} className="title">About Aqua Dashboard</Title>
@@ -35,8 +34,6 @@ export default function Landing() {
           />
         </Card>
       </div>
-
-      {/* Right side images */}
       <div className="images-container">
         <img src={vulnerabilityImage} alt="Vulnerability" className="landing-image" />
         <img src={managementImage} alt="Vulnerability Management" className="landing-image" />
