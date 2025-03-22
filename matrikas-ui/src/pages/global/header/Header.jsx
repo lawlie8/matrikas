@@ -1,6 +1,6 @@
 import './Header.css';
 import { useNavigate } from "react-router";
-import { PieChartOutlined, FireOutlined, PlusCircleOutlined, HomeOutlined, HomeFilled, PieChartFilled, FireFilled, PlusCircleFilled, SwapOutlined, SwapRightOutlined } from '@ant-design/icons';
+import { PieChartOutlined, FireOutlined, PlusCircleOutlined, HomeOutlined, HomeFilled, PieChartFilled, FireFilled, PlusCircleFilled, SwapOutlined, SwapRightOutlined ,InfoCircleOutlined, InfoCircleFilled} from '@ant-design/icons';
 import { Tooltip } from 'antd'
 import { useState } from 'react';
 
@@ -18,24 +18,12 @@ export default function Header(params = { params }) {
             </li>
         </ul>
         <ul style={{ listStyle: 'none', padding: '0px', marginTop: '50px' }}>
-        <li key={"/"} style={{cursor:'pointer'}} onClick={()=>{
-            setCurrentSelectedPage("/");
-            navigate("/")}}>
-                <Tooltip  placement="right" title="Home">
-                    {
-                        currentSelectedPage !== '/' ?
-                        <HomeOutlined style={{ fontSize: '25px' }} className='header-icon' />
-                         :
-                        <HomeFilled style={{ fontSize: '25px',color:'#fc6008' }} className='header-icon' /> 
-                    }
-                </Tooltip>
-            </li>
-            <li key={"/dashboard"} style={{marginTop:'25px',cursor:'pointer'}} onClick={()=>{
-                setCurrentSelectedPage("/dashboard");
-                navigate("/dashboard")}}>
+            <li key={"/"} style={{marginTop:'25px',cursor:'pointer'}} onClick={()=>{
+                setCurrentSelectedPage("/");
+                navigate("/")}}>
                 <Tooltip  placement="right" title="Dashboard">
                 {
-                        currentSelectedPage !== '/dashboard' ?
+                        currentSelectedPage !== '/' ?
                         <PieChartOutlined style={{ fontSize: '25px' }} className='header-icon' />
                          :
                         <PieChartFilled style={{ fontSize: '25px',color:'#fc6008' }} className='header-icon' /> 
@@ -78,6 +66,18 @@ export default function Header(params = { params }) {
                         <SwapOutlined style={{ fontSize: '25px' }} className='header-icon' />
                          :
                         <SwapRightOutlined style={{ fontSize: '25px',color:'#fc6008'}} className='header-icon' /> 
+                    }
+                </Tooltip>
+            </li>
+            <li key={"/"}  style={{marginTop:'25px',cursor:'pointer'}} onClick={()=>{
+            setCurrentSelectedPage("/info");
+            navigate("/info")}}>
+                <Tooltip  placement="right" title="About">
+                    {
+                        currentSelectedPage !== '/info' ?
+                        <InfoCircleOutlined style={{ fontSize: '25px' }} className='header-icon' />
+                         :
+                        <InfoCircleFilled style={{ fontSize: '25px',color:'#fc6008' }} className='header-icon' /> 
                     }
                 </Tooltip>
             </li>
