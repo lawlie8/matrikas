@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Card, Typography, Select, Button, Table } from 'antd';
+import { Card, Typography, Select, Button, Table, Row, Col, Statistic } from 'antd';
+import Chart from 'react-apexcharts';
 import './CVEComparison.css';
 
 const { Title } = Typography;
@@ -21,40 +22,133 @@ export default function CVEComparison() {
     if (!selectedImage || !version1 || !version2) return;
 
     const mockCVEData = [
-      { cve: 'CVE-2023-0001', severity: 'High', status: version1 !== version2 ? 'Fixed' : 'Present' },
-      { cve: 'CVE-2023-0002', severity: 'Medium', status: version1 !== version2 ? 'Fixed' : 'Present' },
-      { cve: 'CVE-2023-0003', severity: 'Low', status: 'Present' },
+      { library: "aws-ebs-csi", total: 10, cve: 'CVE-2023-0001', severity: 'High', status: version1 !== version2 ? 'Fixed' : 'Present' },
+      { library: "abbc1 ", total: 20, cve: 'CVE-2023-0002', severity: 'Medium', status: version1 !== version2 ? 'Fixed' : 'Present' },
+      { library: "aws-ebs-csi", total: 12, cve: 'CVE-2023-0003', severity: 'Low', status: 'Present' },
+      { library: "aws-ebs-csi", total: 10, cve: 'CVE-2023-0001', severity: 'High', status: version1 !== version2 ? 'Fixed' : 'Present' },
+      { library: "aws-ebs-csi", total: 20, cve: 'CVE-2023-0002', severity: 'Medium', status: version1 !== version2 ? 'Fixed' : 'Present' },
+      { library: "aws-ebs-csi", total: 12, cve: 'CVE-2023-0003', severity: 'Low', status: 'Present' },
+      { library: "aws-ebs-csi", total: 10, cve: 'CVE-2023-0001', severity: 'High', status: version1 !== version2 ? 'Fixed' : 'Present' },
+      { library: "aws-ebs-csi", total: 20, cve: 'CVE-2023-0002', severity: 'Medium', status: version1 !== version2 ? 'Fixed' : 'Present' },
+      { library: "aws-ebs-csi", total: 12, cve: 'CVE-2023-0003', severity: 'Low', status: 'Present' },
+      { library: "aws-ebs-csi", total: 10, cve: 'CVE-2023-0001', severity: 'High', status: version1 !== version2 ? 'Fixed' : 'Present' },
+      { library: "aws-ebs-csi", total: 20, cve: 'CVE-2023-0002', severity: 'Medium', status: version1 !== version2 ? 'Fixed' : 'Present' },
+      { library: "aws-ebs-csi", total: 12, cve: 'CVE-2023-0003', severity: 'Low', status: 'Present' },
     ];
     setComparisonResult(mockCVEData);
   };
 
   const columns = [
     { title: 'CVE ID', dataIndex: 'cve', key: 'cve' },
-    { title: 'Severity', dataIndex: 'severity', key: 'severity' },
-    { title: 'Status', dataIndex: 'status', key: 'status' },
+    { title: 'Severity', dataIndex: 'severity', key: 'severity',
+    filters: [
+      { text: 'Critical', value: 'Critical' },
+      { text: 'High', value: 'High' },
+      { text: 'Medium', value: 'Medium' },
+      { text: 'Low', value: 'Low' },
+    ],
+    onFilter: (value, record) => record.severity.indexOf(value) === 0, },
+    { title: 'Status', 
+      dataIndex: 'status', 
+      key: 'status', 
+      filters: [
+        { text: 'Fixed', value: 'Fixed' },
+        { text: 'Present', value: 'Present' },
+      ],
+      onFilter: (value, record) => record.status.indexOf(value) === 0,
+      render: (status) => {
+      const statusStyle = status === 'Fixed' 
+        ? { backgroundColor: 'green', color: 'white', padding: '5px 15px', borderRadius: '25px' }
+        : {backgroundColor: 'red', color: 'white', padding: '5px 15px', borderRadius: '25px'};
+      
+      return (
+        <span style={statusStyle}>{status}</span>
+      );}},
+  ];
+
+  // Prepare data for the line chart based on mockCVEData
+  const chartData = comparisonResult.map(item => ({
+    cve: item.cve,
+    total: item.total,
+    library: item.library,
+  }));
+
+  const chartOptions = {
+    chart: {
+      id: 'line-chart',
+      type: 'line',
+      height: '300px',
+    },
+    xaxis: {
+      categories: chartData.map(data => data.library),
+    },
+    yaxis: {
+
+      title: {
+        text: 'CVE Count',
+      },
+    },
+    stroke: {
+      curve: 'smooth',
+    },
+    colors: ['#00E396'],
+  };
+
+  const chartSeries = [
+    {
+      name: 'CVE Count',
+      data: chartData.map(data => data.total),
+    },
   ];
 
   return (
     <div className="cve-comparison-page">
-      <Card className="cve-comparison-card">
+      <Card className="cve-comparison-card" >
         <Title level={1} style={{ textAlign: 'center' }}>CVE Comparison</Title>
-        <Select placeholder="Select Image" style={{ width: '100%', marginBottom: '10px' }} onChange={setSelectedImage}>
+        <Select placeholder="Select Image" style={{ width: '50%' }} onChange={setSelectedImage}>
           {images.map((image) => (
             <Option key={image.name} value={image.name}>{image.name}</Option>
           ))}
         </Select>
-        <Select placeholder="Select First Version" style={{ width: '48%', marginRight: '4%' }} onChange={setVersion1} disabled={!selectedImage}>
+        <br /> <Select placeholder="Select First Version" style={{ width: '25%', marginRight: '0.25%' }} onChange={setVersion1} disabled={!selectedImage}>
           {selectedImage && images.find(img => img.name === selectedImage).versions.map(version => (
             <Option key={version} value={version}>{version}</Option>
           ))}
         </Select>
-        <Select placeholder="Select Second Version" style={{ width: '48%' }} onChange={setVersion2} disabled={!selectedImage}>
+        <Select placeholder="Select Second Version" style={{ width: '25%' }} onChange={setVersion2} disabled={!selectedImage}>
           {selectedImage && images.find(img => img.name === selectedImage).versions.map(version => (
             <Option key={version} value={version}>{version}</Option>
           ))}
         </Select>
-        <Button type="primary" style={{ marginTop: '10px', width: '100%' }} onClick={handleCompare} disabled={!version1 || !version2}>Compare</Button>
-        {comparisonResult.length > 0 && <Table style={{ marginTop: '20px' }} columns={columns} dataSource={comparisonResult} pagination={false} />}
+      <br /> <Button type="primary" style={{ marginTop: '10px', width: '50%' }} onClick={handleCompare} disabled={!version1 || !version2}>Compare</Button>
+        <Row gutter={16} style={{ marginTop: '20px' }}>
+          <Col span={14}>
+            {comparisonResult.length > 0 && <Table columns={columns} dataSource={comparisonResult} pagination={true} />}
+          </Col>
+          <Col span={10}>
+            {/* <Row gutter={16}> */}
+              {/* Total CVE count card */}
+              <Col >
+                <Card title="Total CVEs fixed" bordered={false}>
+                  <Statistic title="High" value="10" />
+                  <Statistic title="Medium" value="10" />
+                </Card>
+              </Col>
+          <Col>
+            {comparisonResult.length > 0 && (
+              <Card title="CVE Count Chart" >
+                <Chart
+                  options={chartOptions}
+                  series={chartSeries}
+                  type="line"
+                  height="300px"
+                />
+              </Card>
+            )}
+          </Col>
+          {/* </Row> */}
+          </Col>
+        </Row>
       </Card>
     </div>
   );
