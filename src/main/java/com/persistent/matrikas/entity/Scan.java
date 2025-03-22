@@ -20,17 +20,17 @@ public class Scan {
 
     @Column(nullable = false)
     private int total;
-
-    @Column(nullable = false)
+    @Lob
+    @Column(nullable = false, length = 4000)
     private String high;
-
-    @Column(nullable = false)
+    @Lob
+    @Column(nullable = false, length = 4000)
     private String low;
-
-    @Column(nullable = false)
+    @Lob
+    @Column(nullable = false, length = 4000)
     private String medium;
-
-    @Column(nullable = false)
+    @Lob
+    @Column(nullable = false, length = 4000)
     private String critical;
 
     public Long getId() {

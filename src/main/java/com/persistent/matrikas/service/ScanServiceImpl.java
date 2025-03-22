@@ -15,9 +15,8 @@ import org.springframework.stereotype.Service;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+
 @Service
 public class ScanServiceImpl implements ScanService{
     @Autowired
@@ -145,5 +144,56 @@ public class ScanServiceImpl implements ScanService{
     public void deleteScan(Long id) throws Exception {
         Scan existingScan = getScanById(id);
         scanRepository.delete(existingScan);
+    }
+
+    @Override
+    public List<Map<String, String>> getFixedCVEs(String imageName, String oldTag, String newTag) {
+        System.out.println("here1");
+        String tagName = oldTag;
+        List<Scan> oldScans = scanRepository.findByLibraryNameAndTag(imageName, tagName);
+        tagName = newTag;
+        List<Scan> newScans = scanRepository.findByLibraryNameAndTag(imageName, tagName);
+        System.out.println("here2");
+
+        Set<String> newcvesfound = new HashSet<>();
+
+        for (Scan scan : newScans) {
+            newcvesfound.addAll(parscves(scan.getCritical()));
+            newcvesfound.addAll(parscves(scan.getLow()));
+            newcvesfound.addAll(parscves(scan.getMedium()));
+            newcvesfound.addAll(parscves(scan.getHigh()));
+        }
+        System.out.println("here3");
+
+        List<Map<String,String>> fixedcves = new ArrayList<>();
+
+        for(Scan scan : oldScans) {
+            addFixedCVEs(fixedcves,parscves(scan.getCritical()),"Critical",newcvesfound);
+            addFixedCVEs(fixedcves,parscves(scan.getHigh()),"High",newcvesfound);
+            addFixedCVEs(fixedcves,parscves(scan.getMedium()),"Medium",newcvesfound);
+            addFixedCVEs(fixedcves,parscves(scan.getLow()),"Low",newcvesfound);
+
+        }
+        System.out.println("here4");
+
+        return fixedcves;
+    }
+
+    private void addFixedCVEs(List<Map<String, String>> fixedCves, List<String> cveList, String severity, Set<String> newCveSet) {
+        if(cveList != null) {
+         for (String cve: cveList) {
+             if(!newCveSet.contains(cve)){
+                 Map<String,String> cveData = new HashMap<>();
+                 cveData.put("cveId", cve);
+                 cveData.put("severity", severity);
+                 fixedCves.add(cveData);
+             }
+         }
+        }
+    }
+
+
+    private List<String> parscves(String cve) {
+        return (cve == null || cve.isEmpty() ? new ArrayList<>() : Arrays.asList(cve.split(",")));
     }
 }

@@ -3,6 +3,7 @@ import com.persistent.matrikas.entity.Library;
 import com.persistent.matrikas.entity.Tags;
 import com.persistent.matrikas.repository.LibraryRepository;
 import com.persistent.matrikas.repository.TagsRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.json.JSONArray;
@@ -24,6 +25,8 @@ public class TagsServiceImpl implements TagsService {
     @Autowired
     LibraryRepository libraryRepository;
 
+    @Autowired
+    mainService m;
     @Override
     public Tags createTags(Tags tag) {
         return tagsRepository.save(tag);
@@ -54,15 +57,15 @@ public class TagsServiceImpl implements TagsService {
         for (Library library : libraries) {
             try {
                 String apiUrl = library.getApiUrl();
-                String source = library.getSource();
+//                String source = library.getSource();
 
                 // ✅ Combine apiUrl and source to form githubUrl
-                if (apiUrl != null && source != null) {
-                    String githubUrl = apiUrl + "/" + source + "/releases"; // Build dynamic URL
-                    System.out.println("Fetching releases from URL: " + githubUrl);
+                if (apiUrl != null ) {
+//                    String githubUrl = apiUrl + "/" + source + "/releases"; // Build dynamic URL
+//                    System.out.println("Fetching releases from URL: " + githubUrl);
 
                     // Fetch tags from GitHub API
-                    String jsonResponse = fetchGitHubReleases(githubUrl);
+                    String jsonResponse = fetchGitHubReleases(apiUrl);
 
                     // Parse and store tags
                     storeTagsFromJson(jsonResponse, library);
@@ -126,7 +129,14 @@ public class TagsServiceImpl implements TagsService {
                     }
 
                     // ✅ Save tag to database
-                    tagsRepository.save(tag);
+                    try{
+                        saveData(tag,library);
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+
                     System.out.println("Stored new tag: " + tagName);
                 } else {
                     System.out.println("Tag already exists: " + tagName);
@@ -145,6 +155,13 @@ public class TagsServiceImpl implements TagsService {
     public Tags getTagById(Long id) throws Exception {
         return tagsRepository.findById(id)
                 .orElseThrow(() -> new Exception("Tag not found with id: " + id));
+    }
+
+    @Transactional
+    public void saveData(Tags tag, Library library)
+    {
+        tagsRepository.save(tag);
+        m.scanImage(library.getSource(), tag);
     }
 
 }

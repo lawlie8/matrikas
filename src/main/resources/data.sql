@@ -1,0 +1,1 @@
+insert into library (image_name, source, api_url) values("ebs-csi-driver/aws-ebs-csi-driver", "public.ecr.aws/ebs-csi-driver/aws-ebs-csi-driver", "https://api.github.com/repos/kubernetes-sigs/aws-ebs-csi-driver/releases");
