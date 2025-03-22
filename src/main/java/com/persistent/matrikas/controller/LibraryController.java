@@ -10,12 +10,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/libraries")
+@CrossOrigin(originPatterns = "*")
 public class LibraryController {
 
     @Autowired
     LibraryService libraryService;
 
-    @PostMapping("")
+    @PostMapping("/create")
     public ResponseEntity<Library> createLibrary(@RequestBody Library library) {
         return ResponseEntity.ok(libraryService.createLibrary(library));
     }
@@ -25,7 +26,7 @@ public class LibraryController {
         return ResponseEntity.ok(libraryService.getLibraryById(id));
     }
 
-    @GetMapping("")
+    @GetMapping("/get/all")
    public ResponseEntity<List<Library>> getAllLibary() {
         return ResponseEntity.ok(libraryService.getAllLibraries());
     }

@@ -1,45 +1,47 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Typography, Select, Button, Table, Row, Col, Statistic } from 'antd';
 import Chart from 'react-apexcharts';
 import './CVEComparison.css';
-
+import { COMPARE_CVE, GET_ALL_LIBRARIES, GET_TAGS_BY_LIBRARY } from '../../util/Constants';
+import instance from '../../util/axios';
 const { Title } = Typography;
 const { Option } = Select;
 
 export default function CVEComparison() {
-  const images = [
-    { name: 'aws-ebs-csi', versions: ['1.0', '1.1', '1.2', '1.3'] },
-    { name: 'calico', versions: ['3.8', '3.9', '3.10', '3.11'] },
-    { name: 'aws-vpc-cni', versions: ['2.6', '2.7', '2.8', '2.9'] },
-  ];
 
-  const [selectedImage, setSelectedImage] = useState(null);
+
+  const [libraryList, setLibraryList] = useState([]);
+  const [selectedImage, setSelectedImage] = useState([]);
+
   const [version1, setVersion1] = useState(null);
   const [version2, setVersion2] = useState(null);
   const [comparisonResult, setComparisonResult] = useState([]);
+  const [tagList, setTagList] = useState([]);
 
   const handleCompare = () => {
     if (!selectedImage || !version1 || !version2) return;
 
-    const mockCVEData = [
-      { library: "aws-ebs-csi", total: 10, cve: 'CVE-2023-0001', severity: 'Critical', status: version1 !== version2 ? 'Fixed' : 'Present' },
-      { library: "abbc1 ", total: 20, cve: 'CVE-2023-0002', severity: 'Medium', status: version1 !== version2 ? 'Fixed' : 'Present' },
-      { library: "aws-ebs-csi", total: 12, cve: 'CVE-2023-0003', severity: 'Low', status: 'Present' },
-      { library: "aws-ebs-csi", total: 10, cve: 'CVE-2023-0001', severity: 'High', status: version1 !== version2 ? 'Fixed' : 'Present' },
-      { library: "aws-ebs-csi", total: 20, cve: 'CVE-2023-0002', severity: 'Medium', status: version1 !== version2 ? 'Fixed' : 'Present' },
-      { library: "aws-ebs-csi", total: 12, cve: 'CVE-2023-0003', severity: 'Low', status: 'Present' },
-      { library: "aws-ebs-csi", total: 10, cve: 'CVE-2023-0001', severity: 'High', status: version1 !== version2 ? 'Fixed' : 'Present' },
-      { library: "aws-ebs-csi", total: 20, cve: 'CVE-2023-0002', severity: 'Medium', status: version1 !== version2 ? 'Fixed' : 'Present' },
-      { library: "aws-ebs-csi", total: 12, cve: 'CVE-2023-0003', severity: 'Critical', status: 'Present' },
-      { library: "aws-ebs-csi", total: 10, cve: 'CVE-2023-0001', severity: 'High', status: version1 !== version2 ? 'Fixed' : 'Present' },
-      { library: "aws-ebs-csi", total: 20, cve: 'CVE-2023-0002', severity: 'Medium', status: version1 !== version2 ? 'Fixed' : 'Present' },
-      { library: "aws-ebs-csi", total: 12, cve: 'CVE-2023-0003', severity: 'Low', status: 'Present' },
-    ];
-    setComparisonResult(mockCVEData);
+    instance
+      .post(COMPARE_CVE,{
+        imageName : selectedImage[0].imageName,
+        oldTag: version1,
+        newTag: version2
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setComparisonResult(response?.data);
+          console.log(response?.data);
+        }
+      })
+      .catch(() => {
+        
+      });
+
+
   };
 
   const columns = [
-    { title: 'CVE ID', dataIndex: 'cve', key: 'cve' },
+    { title: 'CVE ID', dataIndex: 'cveID', key: 'cveID' },
     { title: 'Severity', dataIndex: 'severity', key: 'severity',
     filters: [
       { text: 'Critical', value: 'Critical' },
@@ -53,7 +55,7 @@ export default function CVEComparison() {
       key: 'status', 
       filters: [
         { text: 'Fixed', value: 'Fixed' },
-        { text: 'Present', value: 'Present' },
+        { text: 'Not-Fixed', value: 'Not-Fixed' },
       ],
       onFilter: (value, record) => record.status.indexOf(value) === 0,
       render: (status) => {
@@ -76,6 +78,8 @@ export default function CVEComparison() {
     series: [severityCounts['Critical'] || 0, severityCounts['High'] || 0, severityCounts['Medium'] || 0, severityCounts['Low'] || 0],
     labels: ['Critical', 'High', 'Medium', 'Low'],
   };
+
+
 
   const donutChartOptions = {
     chart: {
@@ -101,25 +105,75 @@ export default function CVEComparison() {
     dataLabels: { enabled: true },
   };
 
+  useEffect(() => {
+    instance
+      .get(GET_ALL_LIBRARIES)
+      .then((response) => {
+        if (response.status === 200) {
+          
+          setLibraryList(response?.data);
+          console.log(response?.data);
+        }
+      })
+      .catch(() => {
+        
+      });
+  }, []);
+
+
+
+  const handleChange = (value) => {
+    instance
+    .get(GET_TAGS_BY_LIBRARY + "/" + value)
+    .then((response) => {
+      if (response.status === 200) {
+        setTagList(response?.data);
+      }
+    })
+    .catch(() => {
+
+        });
+  };
+
+  useEffect(() => {
+    instance
+      .get(GET_ALL_LIBRARIES)
+      .then((response) => {
+        if (response.status === 200) {
+          setSelectedImage(response?.data);
+        }
+      })
+      .catch(() => {
+        
+      });
+  }, []);
+
+
   return (
     <div className="cve-comparison-page">
       <Card className="cve-comparison-card" >
         <Title level={1} style={{ textAlign: 'center' }}>CVE Comparison</Title>
-        <Select placeholder="Select Image" style={{ width: '50%' }} onChange={setSelectedImage}>
-          {images.map((image) => (
-            <Option key={image.name} value={image.name}>{image.name}</Option>
-          ))}
-        </Select>
-        <br /> <Select placeholder="Select First Version" style={{ width: '25%', marginRight: '0.25%' }} onChange={setVersion1} disabled={!selectedImage}>
-          {selectedImage && images.find(img => img.name === selectedImage).versions.map(version => (
-            <Option key={version} value={version}>{version}</Option>
-          ))}
-        </Select>
-        <Select placeholder="Select Second Version" style={{ width: '25%' }} onChange={setVersion2} disabled={!selectedImage}>
-          {selectedImage && images.find(img => img.name === selectedImage).versions.map(version => (
-            <Option key={version} value={version}>{version}</Option>
-          ))}
-        </Select>
+       <Select placeholder="Image Name" onChange={handleChange}>
+                         {
+                         libraryList.map((item, index) => (
+                           <Select.Option value={item.id}>{item.imageName}</Select.Option>
+                         ))
+                         }
+                       </Select>
+        <br /> <Select placeholder="Old Image Version" onChange={setVersion1}>
+                                         {
+                                          tagList.map((item, index) => (
+                                            <Select.Option value={item.version}>{item.version}</Select.Option>
+                                          ))
+                                          }
+                        </Select>
+<Select placeholder="New Image Version" onChange={setVersion2}>
+                                 {
+                                  tagList.map((item, index) => (
+                                    <Select.Option value={item.version}>{item.version}</Select.Option>
+                                  ))
+                                  }
+                </Select>
       <br /> <Button type="primary" style={{ marginTop: '10px', width: '50%' }} onClick={handleCompare} disabled={!version1 || !version2}>Compare</Button>
         <Row gutter={16} style={{ marginTop: '20px' }}>
           <Col span={14}>

@@ -1,5 +1,6 @@
 package com.persistent.matrikas.controller;
 import com.persistent.matrikas.entity.Scan;
+import com.persistent.matrikas.service.ScanDTO;
 import com.persistent.matrikas.service.ScanService;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/scans")
+@CrossOrigin(originPatterns = "*")
 public class ScanController {
 
     @Autowired
@@ -55,7 +57,7 @@ public class ScanController {
     }
 
     @PostMapping("/fixedcves")
-    public ResponseEntity<List<Map<String, String>>> getFixedCVEs(@RequestBody CVERequest request) {
+    public ResponseEntity<?> getFixedCVEs(@RequestBody CVERequest request) {
         // Log the incoming data to verify the parameters are mapped correctly
         System.out.println("here");
         System.out.println("image name is - " + request.getImageName());
@@ -63,7 +65,7 @@ public class ScanController {
         System.out.println("new tag is - " + request.getNewTag());
 
         // Use the request parameters to fetch the fixed CVEs
-        List<Map<String, String>> fixedcvelist = scanService.getFixedCVEs(
+        List<ScanDTO> fixedcvelist = scanService.getFixedCVEs(
                 request.getImageName(), request.getOldTag(), request.getNewTag()
         );
 

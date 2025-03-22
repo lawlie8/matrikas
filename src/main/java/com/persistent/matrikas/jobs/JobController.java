@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/jobs")
+@CrossOrigin(originPatterns = "*")
 public class JobController {
 
     private static final Logger log = LoggerFactory.getLogger(JobController.class);

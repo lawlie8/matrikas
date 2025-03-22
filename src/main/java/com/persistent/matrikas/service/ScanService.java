@@ -20,5 +20,5 @@ public interface ScanService {
 //    public void createDockerAndScan(Long tagId) throws Exception;
     void deleteScan(Long id) throws Exception;
 
-    List<Map<String, String>> getFixedCVEs(String imageName, String oldTag, String newTag);
+    List<ScanDTO> getFixedCVEs(String imageName, String oldTag, String newTag);
 }

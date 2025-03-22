@@ -147,7 +147,7 @@ public class ScanServiceImpl implements ScanService{
     }
 
     @Override
-    public List<Map<String, String>> getFixedCVEs(String imageName, String oldTag, String newTag) {
+    public List<ScanDTO> getFixedCVEs(String imageName, String oldTag, String newTag) {
         System.out.println("here1");
         String tagName = oldTag;
         List<Scan> oldScans = scanRepository.findByLibraryNameAndTag(imageName, tagName);
@@ -165,7 +165,7 @@ public class ScanServiceImpl implements ScanService{
         }
         System.out.println("here3");
 
-        List<Map<String,String>> fixedcves = new ArrayList<>();
+        List<ScanDTO> fixedcves = new ArrayList<>();
 
         for(Scan scan : oldScans) {
             addFixedCVEs(fixedcves,parscves(scan.getCritical()),"Critical",newcvesfound);
@@ -179,14 +179,23 @@ public class ScanServiceImpl implements ScanService{
         return fixedcves;
     }
 
-    private void addFixedCVEs(List<Map<String, String>> fixedCves, List<String> cveList, String severity, Set<String> newCveSet) {
+    private void addFixedCVEs(List<ScanDTO> fixedCves, List<String> cveList, String severity, Set<String> newCveSet) {
         if(cveList != null) {
-         for (String cve: cveList) {
+
+            for (String cve: cveList) {
              if(!newCveSet.contains(cve)){
-                 Map<String,String> cveData = new HashMap<>();
-                 cveData.put("cveId", cve);
-                 cveData.put("severity", severity);
-                 fixedCves.add(cveData);
+                 ScanDTO scanDTO = new ScanDTO();
+                 scanDTO.setCveID(cve);
+                 scanDTO.setSeverity(severity);
+                 scanDTO.setStatus("Fixed");
+                 fixedCves.add(scanDTO);
+             }
+             else  {
+                 ScanDTO scanDTO = new ScanDTO();
+                 scanDTO.setCveID(cve);
+                 scanDTO.setSeverity(severity);
+                 scanDTO.setStatus("Not-Fixed");
+                 fixedCves.add(scanDTO);
              }
          }
         }
