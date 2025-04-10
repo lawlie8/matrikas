@@ -1,0 +1,1 @@
+FROM public.ecr.aws/ebs-csi-driver/aws-ebs-csi-driver:v1.31.0

@@ -6,7 +6,7 @@ const { Title, Paragraph } = Typography;
 
 export default function Landing() {
   return (
-    <div className="landing-page-main" style={{ backgroundColor: 'white', minHeight: '100vh', padding: '20px', display: 'flex', justifyContent: 'center' }}>
+    <div className="landing-page-main" style={{ backgroundColor: 'white', padding: '20px', display: 'flex', justifyContent: 'center' }}>
       <Card style={{ maxWidth: 800, width: '100%', boxShadow: 'none', border: 'none' }}>
         <Title level={1}>About Aqua Dashboard</Title>
         <Paragraph>
