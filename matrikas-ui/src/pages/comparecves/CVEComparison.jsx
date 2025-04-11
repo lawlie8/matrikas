@@ -183,22 +183,7 @@ export default function CVEComparison() {
             {/* <Row gutter={16}> */}
               <Col >
               
-                {comparisonResult.length > 0 && <Card title="Total CVEs fixed"> 
-                <Row gutter={16}>
-                <Col span={6}>
-          <Statistic title="Critical" value="10" />
-        </Col>
-        <Col span={6}>
-          <Statistic title="High" value="10" />
-        </Col>
-        <Col span={6}>
-          <Statistic title="Medium" value="10" />
-        </Col>
-        <Col span={6}>
-          <Statistic title="Low" value="5" /> 
-        </Col>
-      </Row>
-                </Card>}
+                
               </Col>
           <Col>
           {comparisonResult.length > 0 && (

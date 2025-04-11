@@ -9,33 +9,44 @@ const Dashboard = () => {
   const [libraryList, setLibraryList] = useState([]);
   const [dashboardCve, setDashboardCve] = useState([]);
   const [cardsCveCount, setCardsCveCount] = useState([]);
-
-
   const [tagList, setTagList] = useState([]);
-  const lineChartData = {
-    series: [
-      { name: "Critical", data: [800, 950, 1000, 1100, 1200] },
-      { name: "High", data: [400, 450, 500, 550, 600] },
-      { name: "Medium", data: [200, 300, 350, 400, 450] },
-      { name: "Low", data: [100, 150, 200, 250, 300] },
-    ],
+  const [chartTagList, setChartTagList] = useState([]);
+
+  const [aList, setAList] = useState([
+    { name: "Critical", data: [] },
+    { name: "High", data: [] },
+    { name: "Medium", data: [] },
+    { name: "Low", data: [] }, ]);
+
+    const [maxLength, setMaxLength] = useState(10);
+  
+    useEffect(() => {
+      for (let index = 0; index < 4; index++) {
+        setMaxLength(maxLength > aList[index].data.length ? maxLength : aList[index].data.length)
+      }
+    }, [aList]);
+
+
+  let lineChartData = {
+    series: aList,
     options: {
       chart: { type: "area", height: 350 },
       dataLabels: { enabled: false },
       stroke: { curve: "smooth" },
-      xaxis: { categories: ["27-07", "28-07", "29-07", "30-07", "31-07"] },
+      xaxis: { categories: chartTagList,max:chartTagList.length },
       yaxis: {
         tickAmount: 4,
         labels: { formatter: (value) => Math.round(value) },
         min: 0,
-        max: 2000,
+        max: Math.round(  (maxLength + 10) / 10 ) * 10  ,
       },
       colors: ["#E74C3C", "#E67E22", "#F1C40F", "#3498DB"],
     },
   };
 
+  const sum = [1, 2, 3].reduce((partialSum, a) => partialSum + a, 0);
   const donutChartData = {
-    series: [485, 878, 1002, 100],
+    series: [ aList[0].data.reduce((partialSum, a) => partialSum + a, 0) , aList[1].data.reduce((partialSum, a) => partialSum + a, 0) , aList[2].data.reduce((partialSum, a) => partialSum + a, 0) , aList[3].data.reduce((partialSum, a) => partialSum + a, 0) ],
     options: {
       chart: { type: "donut" },
       labels: ["Critical", "High", "Medium", "Low"],
@@ -45,14 +56,9 @@ const Dashboard = () => {
     },
   };
 
-  const tableData = [
-    { date: "27-07", critical: 800, high: 400, medium: 200, low: 100 },
-    { date: "28-07", critical: 950, high: 450, medium: 300, low: 150 },
-    { date: "29-07", critical: 1000, high: 500, medium: 350, low: 200 },
-    { date: "30-07", critical: 1100, high: 550, medium: 400, low: 250 },
-    { date: "31-07", critical: 1200, high: 600, medium: 450, low: 300 },
-  ];
+  const [tableData,setTableData] = useState([]);
 
+  // console.log("alist", aList);
   useEffect(() => {
     instance
       .get(GET_ALL_LIBRARIES)
@@ -83,12 +89,101 @@ const Dashboard = () => {
       .get(GET_TAGS_BY_LIBRARY + "/" + value)
       .then((response) => {
         if (response.status === 200) {
+        // Sort the array by releaseDate (ascending order)
           setTagList(response?.data);
+          response?.data.map((item)=>{
+            setChartTagList(prevArray => [item.version,...prevArray])
+          })
+
+          handleChart(response?.data)
         }
       })
       .catch(() => {});
   };
 
+  const handleChart = (value) => {
+    // console.log(value)
+    value = value.map(e=>e.id)
+    // console.log(value)
+    // console.log(value)
+
+    let high = [];
+    let medium = [];
+    let low = [];
+    let critical = [];
+    
+    let tagData = [];
+
+    console.log("v",value);
+    value.forEach(element => {
+      console.log("element");
+    instance
+      .get(GET_SCAN_BY_TAG_ID + "/" + element)
+      .then((response) => {
+        let d = response?.data
+      
+        if (response.status === 200) {
+          let criticalCount = 0;
+          let mediumCount = 0;
+          let lowCount = 0;
+          let highCount = 0;
+
+          if(d[0].critical !== ""){
+            criticalCount = d[0]?.critical.split(",").length
+          }
+          if(d[0].low !== ""){
+            lowCount = d[0]?.low.split(",").length
+           
+          }
+          if(d[0].medium !== ""){
+            mediumCount = d[0]?.medium.split(",").length
+            
+          }
+          if(d[0].high !== ""){
+            highCount = d[0]?.high.split(",").length
+            
+          }
+          
+          tagData.push({ date : d[0].tag.releaseDate , tag: d[0].tag.version, critical: criticalCount, high: highCount, medium: mediumCount, low: lowCount });
+          console.log("tag","counts",mediumCount,criticalCount,lowCount,highCount);
+
+        }
+      })
+      .catch(() => {});
+    });
+    console.log("mydata",tagData[0])
+  
+  
+
+    console.log("i am here",high,medium,low,critical)
+    
+    setTimeout(() => {
+
+      
+      const sortedData = tagData.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      sortedData.forEach(e=> {
+        critical.push(e.critical)
+        high.push(e.high)
+        medium.push(e.medium)
+        low.push(e.low)
+      })
+      
+      critical.reverse()
+      high.reverse()
+      medium.reverse()
+      low.reverse()
+
+      console.log("is sorted ? .",sortedData);
+      setTableData(tagData)
+      setAList([
+        { name: "Critical", data: critical },
+        { name: "High", data: high },
+        { name: "Medium", data: medium },
+        { name: "Low", data: low }, ]);
+    }, 2000);
+
+  };
   useEffect(()=>{
     try{
       let criticalCount = 0;
@@ -111,10 +206,7 @@ const Dashboard = () => {
       setCardsCveCount([criticalCount,highCount,mediumCount,lowCount])
     }catch{
 
-    }
-
-      
-    
+    } 
 
   },[dashboardCve])
 
@@ -164,7 +256,10 @@ const Dashboard = () => {
         <div className="dashboard-center">
           <div className="dashboard-stats">
             {["Critical", "High", "Medium", "Low"].map((severity, index) => (
-              <div key={index} className="stat-card">
+              <div key={index} className="stat-card" style={{backgroundColor: severity === "Critical" ? "#E74C3C" :
+                severity === "High" ? "#E67E22" :
+                severity === "Medium" ? "#F1C40F" :
+                severity === "Low" ? "#3498DB" : "white"}}>
                 <h2 className="stat-title">{severity}</h2>
                 <p className="stat-value">
                   {cardsCveCount[index]}
@@ -195,11 +290,11 @@ const Dashboard = () => {
           </div>
 
           <div className="table-container">
-            <h2 className="table-title">CVE Counts by Scan Date</h2>
+            <h2 className="table-title">CVE Counts by Library version</h2>
             <table className="dashboard-table">
               <thead>
                 <tr>
-                  <th>Date</th>
+                  <th>Tag</th>
                   <th>Critical</th>
                   <th>High</th>
                   <th>Medium</th>
@@ -209,7 +304,7 @@ const Dashboard = () => {
               <tbody>
                 {tableData.map((row, index) => (
                   <tr key={index}>
-                    <td>{row.date}</td>
+                    <td>{row.tag}</td>
                     <td>{row.critical}</td>
                     <td>{row.high}</td>
                     <td>{row.medium}</td>
