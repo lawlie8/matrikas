@@ -77,7 +77,7 @@ export default function Header(params = { params }) {
                         currentSelectedPage !== '/comparecves' ?
                         <SwapOutlined style={{ fontSize: '25px' }} className='header-icon' />
                          :
-                        <SwapRightOutlined style={{ fontSize: '25px',color:'#fc6008'}} className='header-icon' /> 
+                        <SwapOutlined style={{ fontSize: '25px',color:'#fc6008'}} className='header-icon' /> 
                     }
                 </Tooltip>
             </li>
