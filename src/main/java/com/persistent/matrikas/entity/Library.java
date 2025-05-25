@@ -22,6 +22,9 @@ public class Library {
     @Column(name = "api_url")
     private String apiUrl;
 
+    @Column(name = "is_sidecar")
+    private boolean  isSideCar;
+
     @OneToMany(mappedBy = "library", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Tags> dataList;
@@ -64,5 +67,13 @@ public class Library {
 
     public void setImageName(String imageName) {
         this.imageName = imageName;
+    }
+
+    public boolean isSideCar() {
+        return isSideCar;
+    }
+
+    public void setSideCar(boolean sideCar) {
+        isSideCar = sideCar;
     }
 }

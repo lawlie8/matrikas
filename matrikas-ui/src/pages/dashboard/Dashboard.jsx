@@ -10,6 +10,8 @@ const Dashboard = () => {
   const [dashboardCve, setDashboardCve] = useState([]);
   const [cardsCveCount, setCardsCveCount] = useState([]);
   const [tagList, setTagList] = useState([]);
+  const [isSideCar, setIsSideCar] = useState([]);
+
   const [chartTagList, setChartTagList] = useState([]);
 
   const [aList, setAList] = useState([
@@ -85,6 +87,10 @@ const Dashboard = () => {
   }, []);
 
   const handleChange = (value) => {
+    libraryList.map((item)=>{
+      if(item.id === value){}
+        setIsSideCar(item.sideCar)
+    })    
     instance
       .get(GET_TAGS_BY_LIBRARY + "/" + value)
       .then((response) => {
@@ -240,6 +246,18 @@ const Dashboard = () => {
                   </Select.Option>
                 ))}
               </Select>
+              
+            </div>
+            <div className="filter-card" style={{display:isSideCar === true ? "block" : "none"}}>
+              <h2 className="filter-label">{"Side Car Name"}</h2>
+              <Select placeholder="Side Car Name" onChange={handleChange}>
+                {libraryList.map((item) => (
+                  <Select.Option value={item.id}>
+                    {item.imageName}
+                  </Select.Option>
+                ))}
+              </Select>
+              
             </div>
             <div className="filter-card">
               <h2 className="filter-label">{"Version"}</h2>
