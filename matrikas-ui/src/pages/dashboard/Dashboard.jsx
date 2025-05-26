@@ -7,6 +7,8 @@ import { notification, Select } from "antd";
 
 const Dashboard = () => {
   const [libraryList, setLibraryList] = useState([]);
+    const [sideCarList, setSideCarList] = useState([]);
+
   const [dashboardCve, setDashboardCve] = useState([]);
   const [cardsCveCount, setCardsCveCount] = useState([]);
   const [tagList, setTagList] = useState([]);
@@ -88,8 +90,11 @@ const Dashboard = () => {
 
   const handleChange = (value) => {
     libraryList.map((item)=>{
-      if(item.id === value){}
+      if(item.id === value){
         setIsSideCar(item.sideCar)
+        setSideCarList(item.sideCarsList)
+      }
+
     })    
     instance
       .get(GET_TAGS_BY_LIBRARY + "/" + value)
@@ -251,9 +256,9 @@ const Dashboard = () => {
             <div className="filter-card" style={{display:isSideCar === true ? "block" : "none"}}>
               <h2 className="filter-label">{"Side Car Name"}</h2>
               <Select placeholder="Side Car Name" onChange={handleChange}>
-                {libraryList.map((item) => (
+                {sideCarList?.map((item) => (
                   <Select.Option value={item.id}>
-                    {item.imageName}
+                    {item.sideCarName}
                   </Select.Option>
                 ))}
               </Select>

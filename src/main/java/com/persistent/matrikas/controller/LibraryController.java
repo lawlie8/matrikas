@@ -1,8 +1,10 @@
 package com.persistent.matrikas.controller;
 
 import com.persistent.matrikas.entity.Library;
+import com.persistent.matrikas.entity.LibraryDTO;
 import com.persistent.matrikas.service.LibraryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,9 +29,10 @@ public class LibraryController {
         return ResponseEntity.ok(libraryService.getLibraryById(id));
     }
 
-    @GetMapping("/get/all")
-   public ResponseEntity<List<Library>> getAllLibary() {
-        return ResponseEntity.ok(libraryService.getAllLibraries());
+    @RequestMapping(value = "/get/all",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+   public ResponseEntity<List<LibraryDTO>> getAllLibary() {
+        List<LibraryDTO> libraries = libraryService.getAllLibraries();
+        return ResponseEntity.ok(libraries);
     }
 
     @PutMapping("/{id}")

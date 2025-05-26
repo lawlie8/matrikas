@@ -1,11 +1,13 @@
 package com.persistent.matrikas.service;
 
 
+import com.persistent.matrikas.entity.LibraryDTO;
 import com.persistent.matrikas.repository.LibraryRepository;
 import com.persistent.matrikas.entity.Library;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,8 +27,21 @@ public class LibraryServiceImpl implements LibraryService{
     }
 
     @Override
-    public List<Library> getAllLibraries() {
-        return libraryRepository.findAll();
+    public List<LibraryDTO> getAllLibraries() {
+        List<Library> libraries =  libraryRepository.findAll();
+        List<LibraryDTO> libraryDTOS = new ArrayList<>();
+        for(int i = 0;i< libraries.size();i++){
+            LibraryDTO libraryDTO = new LibraryDTO();
+            libraryDTO.setId(libraries.get(i).getId());
+            libraryDTO.setImageName(libraries.get(i).getImageName());
+            libraryDTO.setSideCar(libraries.get(i).isSideCar());
+            libraryDTO.setApiUrl(libraries.get(i).getApiUrl());
+            libraryDTO.setSource(libraries.get(i).getSource());
+            libraryDTO.setSideCarsList(libraries.get(i).getSideCarsList());
+            libraryDTOS.add(libraryDTO);
+        }
+        return libraryDTOS;
+
     }
 
     @Override
@@ -35,6 +50,7 @@ public class LibraryServiceImpl implements LibraryService{
        lib.setImageName(library.getImageName());
        lib.setSource(library.getSource());
        lib.setApiUrl(library.getApiUrl());
+       lib.setSideCarsList(library.getSideCarsList());
        return libraryRepository.save(lib);
     }
 

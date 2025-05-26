@@ -29,6 +29,10 @@ public class Library {
     @JsonIgnore
     private List<Tags> dataList;
 
+    @OneToMany(mappedBy = "library", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<SideCars> sideCarsList;
+
     public List<Tags> getDataList() {
         return dataList;
     }
@@ -75,5 +79,13 @@ public class Library {
 
     public void setSideCar(boolean sideCar) {
         isSideCar = sideCar;
+    }
+
+    public List<SideCars> getSideCarsList() {
+        return sideCarsList;
+    }
+
+    public void setSideCarsList(List<SideCars> sideCarsList) {
+        this.sideCarsList = sideCarsList;
     }
 }
