@@ -57,10 +57,11 @@ public class TagsServiceImpl implements TagsService {
         for (Library library : libraries) {
             try {
                 String apiUrl = library.getApiUrl();
-//                String source = library.getSource();
 
-                // ✅ Combine apiUrl and source to form githubUrl
                 if (apiUrl != null ) {
+                    if(apiUrl.isEmpty()){
+                        apiUrl = library.getSideCarsList().get(0).getApiUrl();
+                    }
 //                    String githubUrl = apiUrl + "/" + source + "/releases"; // Build dynamic URL
 //                    System.out.println("Fetching releases from URL: " + githubUrl);
 
@@ -113,7 +114,7 @@ public class TagsServiceImpl implements TagsService {
             String tagName = release.getString("tag_name");
 
             // Store only tags starting with 'v'
-            if (tagName.startsWith("v")) {
+            if (tagName.startsWith("v") || Character.isDigit(tagName.charAt(0))) {
                 // ✅ Check if tag already exists for the library
                 boolean tagExists = tagsRepository.existsByLibraryAndVersion(library, tagName);
                 if (!tagExists) {

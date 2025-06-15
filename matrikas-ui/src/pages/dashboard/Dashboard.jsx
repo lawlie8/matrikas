@@ -22,7 +22,7 @@ const Dashboard = () => {
     { name: "Medium", data: [] },
     { name: "Low", data: [] }, ]);
 
-    const [maxLength, setMaxLength] = useState(10);
+    const [maxLength, setMaxLength] = useState(20);
   
     useEffect(() => {
       for (let index = 0; index < 4; index++) {

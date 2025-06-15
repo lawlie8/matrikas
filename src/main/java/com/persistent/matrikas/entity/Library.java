@@ -29,7 +29,7 @@ public class Library {
     @JsonIgnore
     private List<Tags> dataList;
 
-    @OneToMany(mappedBy = "library", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "library", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     @JsonIgnore
     private List<SideCars> sideCarsList;
 
