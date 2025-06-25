@@ -87,7 +87,7 @@ public class TagsServiceImpl implements TagsService {
         URL apiUrl = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) apiUrl.openConnection();
         connection.setRequestMethod("GET");
-        connection.setRequestProperty("Accept", "application/vnd.github.v3+json");
+        //connection.setRequestProperty("Accept", "application/vnd.github.v3+json");
 
         int responseCode = connection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) {
@@ -162,7 +162,7 @@ public class TagsServiceImpl implements TagsService {
     public void saveData(Tags tag, Library library)
     {
         tagsRepository.save(tag);
-        m.scanImage(library.getSource(), tag);
+        m.scanImage(library, tag);
     }
 
 }

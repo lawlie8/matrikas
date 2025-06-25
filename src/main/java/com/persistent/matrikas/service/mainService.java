@@ -1,12 +1,12 @@
 package com.persistent.matrikas.service;
 
+import com.persistent.matrikas.DTOs.ScanResult;
 import com.persistent.matrikas.dockerscan;
+import com.persistent.matrikas.entity.Library;
 import com.persistent.matrikas.entity.Scan;
 import com.persistent.matrikas.entity.Tags;
 import com.persistent.matrikas.repository.ScanRepository;
 import com.persistent.matrikas.repository.TagsRepository;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +26,23 @@ public class mainService {
     @Autowired
     private ScanRepository scanRepository;
 
-    public ScanResult scanImage(String imageName, Tags tag) {
-        String fullImage = imageName + ":" + tag.getVersion();
+    public void scanImage(Library library, Tags tag) {
+        String fullImage = "";
+        if (library.isSideCar()) {
+            //Full Image Name is suffixed with sideCar /
+            for (int i = 0; i < library.getSideCarsList().size(); i++) {
+                fullImage = library.getSource() + "/" + library.getSideCarsList().get(i).getSideCarName() + ":" + tag.getVersion();
+                scanImage(fullImage, tag);
+            }
+        } else {
+            fullImage = library.getSource() + ":" + tag.getVersion();
+            scanImage(fullImage, tag);
+        }
+
+
+    }
+
+    public ScanResult scanImage(String fullImage, Tags tag) {
 
         System.out.println("Scanning: " + fullImage);
 
@@ -83,19 +98,6 @@ public class mainService {
         } else {
             System.out.println("No vulnerabilities found.");
             return null;
-        }
-    }
-
-    // ScanResult class (You can keep this inside this service class)
-    @Getter
-    @Setter
-    public static class ScanResult {
-        private List<String> cveList;
-        private List<String> severityList;
-
-        public ScanResult(List<String> cveList, List<String> severityList) {
-            this.cveList = cveList;
-            this.severityList = severityList;
         }
 
     }
