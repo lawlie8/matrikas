@@ -1,1 +1,1 @@
-FROM istio:1.23.2
+FROM istio/ztunnel:1.23.2

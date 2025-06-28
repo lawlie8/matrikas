@@ -80,21 +80,3 @@ public class ScanController {
 }
 
 
-
-@Setter
-@Getter
-class CVERequest {
-    // Getters and setters
-
-    public CVERequest(String imageName, String oldTag, String newTag) {
-        this.imageName = imageName;
-        this.oldTag = oldTag;
-        this.newTag = newTag;
-    }
-
-    private String imageName;
-    private String oldTag;
-    private String newTag;
-
-}
-

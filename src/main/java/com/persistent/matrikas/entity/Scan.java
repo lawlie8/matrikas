@@ -15,6 +15,9 @@ public class Scan {
     @JoinColumn(name = "tag_id", nullable = false)
     private Tags tag;
 
+    @Column(nullable = true)
+    private Long sideCarId;
+
     @Column(nullable = false)
     private LocalDate scanDate;
 
@@ -95,5 +98,13 @@ public class Scan {
 
     public void setCritical(String critical) {
         this.critical = critical;
+    }
+
+    public Long getSideCarId() {
+        return sideCarId;
+    }
+
+    public void setSideCarId(Long sideCarId) {
+        this.sideCarId = sideCarId;
     }
 }
