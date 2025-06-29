@@ -127,6 +127,11 @@ public class ScanServiceImpl implements ScanService{
         return scanRepository.findByTag_Id(tagId);
     }
 
+    @Override
+    public List<Scan> getScansByTagIdAndSideCarID(Long tagId,Long sideCarId) {
+        return scanRepository.findByTagIdAndSideCarId(tagId,sideCarId);
+    }
+
 
     @Override
     public Scan updateScan(Long scanId, Scan scan) throws Exception {

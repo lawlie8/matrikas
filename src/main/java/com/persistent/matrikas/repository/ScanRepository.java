@@ -18,4 +18,9 @@ public interface ScanRepository  extends JpaRepository<Scan, Long> {
         """)
     List<Scan> findByLibraryNameAndTag(@Param("imageName") String imageName, @Param("tagName") String tagName);
 
+    @Query(value = """
+        select * from scan where tag_id=:tagId and side_car_id=:sideCarId;
+        """,nativeQuery = true)
+    List<Scan> findByTagIdAndSideCarId(@Param("tagId") Long tagId, @Param("sideCarId") Long sideCarId);
+
 }

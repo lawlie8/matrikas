@@ -14,6 +14,7 @@ public interface ScanService {
     List<Scan> getAllScans();
 
     List<Scan> getScansByTagId(Long tagId);
+    List<Scan> getScansByTagIdAndSideCarID(Long tagId,Long sideCarId);
 
 
     Scan updateScan(Long scanId, Scan scan) throws Exception;

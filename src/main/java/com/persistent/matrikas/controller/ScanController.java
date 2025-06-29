@@ -51,6 +51,11 @@ public class ScanController {
         return scanService.getScansByTagId(tagId);
     }
 
+    @GetMapping("/by-tag/sidecar/{tagId}/{sideCarId}")
+    public List<Scan> getScansByTagId(@PathVariable Long tagId,@PathVariable Long sideCarId) {
+       return scanService.getScansByTagIdAndSideCarID(tagId,sideCarId);
+    }
+
     @PutMapping("/{id}")
     public Scan updateScan(@PathVariable Long id, @RequestBody Scan scan) throws Exception {
         return scanService.updateScan(id, scan);

@@ -6,6 +6,7 @@ export const GET_TAGS_BY_LIBRARY = "/api/tags/by-library";
 export const START_JOB_BY_ID = "/jobs/start";
 
 export const GET_SCAN_BY_TAG_ID = "/api/scans/by-tag";
+export const GET_SCAN_BY_TAG_ID_SIDE_CAR_ID = "/api/scans/by-tag/sidecar";
 
 
 export const COMPARE_CVE = "/api/scans/fixedcves";
