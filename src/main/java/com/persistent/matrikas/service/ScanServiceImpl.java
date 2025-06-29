@@ -18,9 +18,9 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Service
-public class ScanServiceImpl implements ScanService{
+public class ScanServiceImpl implements ScanService {
     @Autowired
-    private  final ScanRepository scanRepository;
+    private final ScanRepository scanRepository;
 
     @Autowired
     private TagsRepository tagsRepository;
@@ -128,8 +128,8 @@ public class ScanServiceImpl implements ScanService{
     }
 
     @Override
-    public List<Scan> getScansByTagIdAndSideCarID(Long tagId,Long sideCarId) {
-        return scanRepository.findByTagIdAndSideCarId(tagId,sideCarId);
+    public List<Scan> getScansByTagIdAndSideCarID(Long tagId, Long sideCarId) {
+        return scanRepository.findByTagIdAndSideCarId(tagId, sideCarId);
     }
 
 
@@ -152,12 +152,23 @@ public class ScanServiceImpl implements ScanService{
     }
 
     @Override
-    public List<ScanDTO> getFixedCVEs(String imageName, String oldTag, String newTag) {
+    public List<ScanDTO> getFixedCVEs(String imageName, String oldTag, String newTag, Long sideCarId) {
         System.out.println("here1");
         String tagName = oldTag;
-        List<Scan> oldScans = scanRepository.findByLibraryNameAndTag(imageName, tagName);
+        List<Scan> oldScans = new ArrayList<>();
+        List<Scan> newScans = new ArrayList<>();
+
+        if (sideCarId != 0) {
+            oldScans = scanRepository.findByLibraryNameAndTagAndSideCar(imageName, tagName, sideCarId);
+        } else {
+            oldScans = scanRepository.findByLibraryNameAndTag(imageName, tagName);
+        }
         tagName = newTag;
-        List<Scan> newScans = scanRepository.findByLibraryNameAndTag(imageName, tagName);
+        if (sideCarId != 0) {
+            newScans = scanRepository.findByLibraryNameAndTagAndSideCar(imageName, tagName, sideCarId);
+        } else {
+            newScans = scanRepository.findByLibraryNameAndTag(imageName, tagName);
+        }
         System.out.println("here2");
 
         Set<String> newcvesfound = new HashSet<>();
@@ -172,11 +183,11 @@ public class ScanServiceImpl implements ScanService{
 
         List<ScanDTO> fixedcves = new ArrayList<>();
 
-        for(Scan scan : oldScans) {
-            addFixedCVEs(fixedcves,parscves(scan.getCritical()),"Critical",newcvesfound);
-            addFixedCVEs(fixedcves,parscves(scan.getHigh()),"High",newcvesfound);
-            addFixedCVEs(fixedcves,parscves(scan.getMedium()),"Medium",newcvesfound);
-            addFixedCVEs(fixedcves,parscves(scan.getLow()),"Low",newcvesfound);
+        for (Scan scan : oldScans) {
+            addFixedCVEs(fixedcves, parscves(scan.getCritical()), "Critical", newcvesfound);
+            addFixedCVEs(fixedcves, parscves(scan.getHigh()), "High", newcvesfound);
+            addFixedCVEs(fixedcves, parscves(scan.getMedium()), "Medium", newcvesfound);
+            addFixedCVEs(fixedcves, parscves(scan.getLow()), "Low", newcvesfound);
 
         }
         System.out.println("here4");
@@ -185,24 +196,23 @@ public class ScanServiceImpl implements ScanService{
     }
 
     private void addFixedCVEs(List<ScanDTO> fixedCves, List<String> cveList, String severity, Set<String> newCveSet) {
-        if(cveList != null) {
+        if (cveList != null) {
 
-            for (String cve: cveList) {
-             if(!newCveSet.contains(cve)){
-                 ScanDTO scanDTO = new ScanDTO();
-                 scanDTO.setCveID(cve);
-                 scanDTO.setSeverity(severity);
-                 scanDTO.setStatus("Fixed");
-                 fixedCves.add(scanDTO);
-             }
-             else  {
-                 ScanDTO scanDTO = new ScanDTO();
-                 scanDTO.setCveID(cve);
-                 scanDTO.setSeverity(severity);
-                 scanDTO.setStatus("Not-Fixed");
-                 fixedCves.add(scanDTO);
-             }
-         }
+            for (String cve : cveList) {
+                if (!newCveSet.contains(cve)) {
+                    ScanDTO scanDTO = new ScanDTO();
+                    scanDTO.setCveID(cve);
+                    scanDTO.setSeverity(severity);
+                    scanDTO.setStatus("Fixed");
+                    fixedCves.add(scanDTO);
+                } else {
+                    ScanDTO scanDTO = new ScanDTO();
+                    scanDTO.setCveID(cve);
+                    scanDTO.setSeverity(severity);
+                    scanDTO.setStatus("Not-Fixed");
+                    fixedCves.add(scanDTO);
+                }
+            }
         }
     }
 

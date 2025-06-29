@@ -3,15 +3,17 @@ package com.persistent.matrikas.controller;
 public class CVERequest {
 
 
-    public CVERequest(String imageName, String oldTag, String newTag) {
+    public CVERequest(String imageName, String oldTag, String newTag,Long sideCarId) {
         this.imageName = imageName;
         this.oldTag = oldTag;
         this.newTag = newTag;
+        this.sideCarId = sideCarId;
     }
 
     private String imageName;
     private String oldTag;
     private String newTag;
+    private Long sideCarId;
 
     public String getImageName() {
         return imageName;
@@ -35,5 +37,13 @@ public class CVERequest {
 
     public void setNewTag(String newTag) {
         this.newTag = newTag;
+    }
+
+    public Long getSideCarId() {
+        return sideCarId;
+    }
+
+    public void setSideCarId(Long sideCarId) {
+        this.sideCarId = sideCarId;
     }
 }

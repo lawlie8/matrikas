@@ -71,7 +71,7 @@ public class ScanController {
 
         // Use the request parameters to fetch the fixed CVEs
         List<ScanDTO> fixedcvelist = scanService.getFixedCVEs(
-                request.getImageName(), request.getOldTag(), request.getNewTag()
+                request.getImageName(), request.getOldTag(), request.getNewTag(),request.getSideCarId()
         );
 
         // Return the response
