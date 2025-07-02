@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 import "./Dashboard.css";
-import { GET_ALL_LIBRARIES, GET_SCAN_BY_TAG_ID, GET_TAGS_BY_LIBRARY,GET_SCAN_BY_TAG_ID_SIDE_CAR_ID } from "../../util/Constants";
+import { GET_ALL_LIBRARIES, GET_SCAN_BY_TAG_ID, GET_TAGS_BY_LIBRARY, GET_SCAN_BY_TAG_ID_SIDE_CAR_ID } from "../../util/Constants";
 import instance from "../../util/axios";
-import { notification, Select } from "antd";
+import { Card, notification, Select, Tag } from "antd";
 
 const Dashboard = () => {
   const [libraryList, setLibraryList] = useState([]);
@@ -15,6 +15,8 @@ const Dashboard = () => {
   const [cardsCveCount, setCardsCveCount] = useState([]);
   const [tagList, setTagList] = useState([]);
   const [isSideCar, setIsSideCar] = useState(false);
+  const [tableData, setTableData] = useState([]);
+  const [lowCVECount, setLowCVECount] = useState({});
 
   const [chartTagList, setChartTagList] = useState([]);
 
@@ -31,6 +33,7 @@ const Dashboard = () => {
       setMaxLength(maxLength > aList[index].data.length ? maxLength : aList[index].data.length)
     }
   }, [aList]);
+
 
 
   let lineChartData = {
@@ -62,8 +65,17 @@ const Dashboard = () => {
     },
   };
 
-  const [tableData, setTableData] = useState([]);
+  useEffect(() => {
+    let arr = [{}];
+    tableData.map((item) => {
+      const tempCount = item.low + item.high + item.medium + item.critical;
+      arr.push({ tag: item.tag, sum: tempCount });
+    })
+    arr.sort((a, b) => a.sum - b.sum);
+    setLowCVECount(arr[1]);
 
+    // Get tag of object with lowest sum
+  }, [tableData]);
   // console.log("alist", aList);
   useEffect(() => {
     instance
@@ -91,22 +103,21 @@ const Dashboard = () => {
   }, []);
 
   const handleChangeSideCar = (sideCarId) => {
-
-      setSelectedSideCarId(sideCarId)
-      setChartTagList([])
-      instance
-        .get(GET_TAGS_BY_LIBRARY + "/" + selectedLibraryId )
-        .then((response) => {
-          if (response.status === 200) {
-            // Sort the array by releaseDate (ascending order)
-            setTagList(response?.data);
-            response?.data.map((item) => {
-              setChartTagList(prevArray => [item.version, ...prevArray])
-            })
-            handleChartForSideCar(response?.data,sideCarId)
-          }
-        })
-        .catch(() => { });
+    setSelectedSideCarId(sideCarId)
+    setChartTagList([])
+    instance
+      .get(GET_TAGS_BY_LIBRARY + "/" + selectedLibraryId)
+      .then((response) => {
+        if (response.status === 200) {
+          // Sort the array by releaseDate (ascending order)
+          setTagList(response?.data);
+          response?.data.map((item) => {
+            setChartTagList(prevArray => [item.version, ...prevArray])
+          })
+          handleChartForSideCar(response?.data, sideCarId)
+        }
+      })
+      .catch(() => { });
   }
 
   const handleChangeImage = (value) => {
@@ -122,7 +133,7 @@ const Dashboard = () => {
     console.log("localsideCar" + localSideCar);
 
     if (localSideCar) {
-        instance
+      instance
         .get(GET_TAGS_BY_LIBRARY + "/" + value)
         .then((response) => {
           if (response.status === 200) {
@@ -154,7 +165,7 @@ const Dashboard = () => {
 
   };
 
-    const handleChartForSideCar = (value,sideCarId) => {
+  const handleChartForSideCar = (value, sideCarId) => {
     // console.log(value)
     value = value.map(e => e.id)
     // console.log(value)
@@ -350,24 +361,24 @@ const Dashboard = () => {
 
   const renderDashboard = (value) => {
     console.log(value);
-    if(isSideCar){
-    instance
-      .get(GET_SCAN_BY_TAG_ID_SIDE_CAR_ID + "/" + value + "/" + selectedSideCarId)
-      .then((response) => {
-        if (response.status === 200) {
-          setDashboardCve(response?.data)
-        }
-      })
-      .catch(() => { });
-    }else{
-    instance
-      .get(GET_SCAN_BY_TAG_ID + "/" + value)
-      .then((response) => {
-        if (response.status === 200) {
-          setDashboardCve(response?.data)
-        }
-      })
-      .catch(() => { });
+    if (isSideCar) {
+      instance
+        .get(GET_SCAN_BY_TAG_ID_SIDE_CAR_ID + "/" + value + "/" + selectedSideCarId)
+        .then((response) => {
+          if (response.status === 200) {
+            setDashboardCve(response?.data)
+          }
+        })
+        .catch(() => { });
+    } else {
+      instance
+        .get(GET_SCAN_BY_TAG_ID + "/" + value)
+        .then((response) => {
+          if (response.status === 200) {
+            setDashboardCve(response?.data)
+          }
+        })
+        .catch(() => { });
     }
   };
 
@@ -438,6 +449,11 @@ const Dashboard = () => {
               height={400}
             />
           </div>
+          <div className="suggestion-div" style={{display:lowCVECount?.tag === undefined ? 'none' : 'block'}}>
+            <Card title="Recommendation " variant="borderless" style={{ width: "100%", marginTop:'20px',textAlign:'left',boxShadow:'0px 2px 5px rgba(0, 0, 0, 0.2)' }}>
+              <p style={{fontWeight:'600'}}>Tag - <Tag color="#2db7f5">{lowCVECount?.tag} </Tag>has the fewest CVEs, with a total of <Tag color="#87d068">{lowCVECount?.sum}</Tag></p>
+            </Card>
+          </div>
         </div>
 
         <div className="dashboard-right">
@@ -461,6 +477,7 @@ const Dashboard = () => {
                   <th>High</th>
                   <th>Medium</th>
                   <th>Low</th>
+                  <th>Total</th>
                 </tr>
               </thead>
               <tbody>
@@ -471,6 +488,7 @@ const Dashboard = () => {
                     <td>{row.high}</td>
                     <td>{row.medium}</td>
                     <td>{row.low}</td>
+                    <td>{row.critical + row.high + row.medium + row.low}</td>
                   </tr>
                 ))}
               </tbody>
