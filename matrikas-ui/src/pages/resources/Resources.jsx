@@ -7,7 +7,7 @@ import './Resources.css';
 export default function Resources() {
   const initialData = [
     { key: '1', name: 'aws-ebs-csi', source: 'https://github.com/kubernetes-sigs/aws-ebs-csi-driver/releases', version: 'v1.41.0' },
-    { key: '2', name: 'calico', source: 'https://github.com/istio/istio/releases/', version: 'v1.26.2 ' },
+    { key: '2', name: 'istio', source: 'https://github.com/istio/istio/releases/', version: 'v1.26.2 ' },
     // { key: '3', name: 'aws-vpc-cni', source: 'https://github.com/aws/amazon-vpc-cni-k8s/releases', version: 'v1.19.3' },
   ];
 
